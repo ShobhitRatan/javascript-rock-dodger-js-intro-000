@@ -57,7 +57,7 @@ function checkCollision(rock) {
 
 function createRock(x) {
   const rock = document.createElement('div')
-
+  GAME.appendChild(rock)
   rock.className = 'rock'
   rock.style.left = `${x}px`
 
@@ -93,12 +93,23 @@ function createRock(x) {
      * But if the rock *has* reached the bottom of the GAME,
      * we should remove the rock from the DOM.
      */
+     rock.style.top = `${top += 2}px`;
+     if(checkCollision(rock)) {
+       return endGame()
+     }
+
+     if (top < GAME_HEIGHT) {
+       window.requestAnimationFrame(moveRock)
+     } else {
+       rock.remove();
+     }
   }
 
   // We should kick off the animation of the rock around here.
 
   // Add the rock to ROCKS so that we can remove all rocks
   // when there's a collision.
+  window.requestAnimationFrame(moveRock)
   ROCKS.push(rock)
 
   // Finally, return the rock element you've created.
@@ -123,6 +134,18 @@ function moveDodger(e) {
    * we've declared for you above.)
    * And be sure to use the functions declared below!
    */
+   const keyPressed = e.which
+  if (keyPressed === LEFT_ARROW || keyPressed === RIGHT_ARROW) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  if (keyPressed === LEFT_ARROW) {
+    moveDodgerLeft(e)
+  }
+  if (keyPressed === RIGHT_ARROW) {
+    moveDodgerRight(e)
+  }
 }
 
 function moveDodgerLeft() {
